@@ -1,5 +1,9 @@
 sudo: false
 
+os:
+  - linux
+  - osx
+
 language: java
 
 jdk:
@@ -16,4 +20,4 @@ before_install:
 
 install: "npm install"
 
-script: "npm test"
+script: "./node_modules/.bin/mocha test/downloaded-files-rights.js"
