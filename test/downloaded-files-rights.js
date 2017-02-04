@@ -19,21 +19,17 @@ describe('downloaded files rights', function() {
     var selenium = require('../');
     // Capture the log output
     var log = '';
-    var logger = function(message) {
-      log += message;
-    };
+    var logger = function(message) { log += message };
     var options = assign({ logger: logger }, defaultConfig);
 
     selenium.install(options, function(err) {
       if (err) {
-        done(err);
-        return;
+        return done(err);
       }
-
       done();
     });
-
   });
+
   after(function() {
     Object.defineProperty(process, 'platform', this.originalPlatform);
   });
@@ -43,12 +39,14 @@ describe('downloaded files rights', function() {
     var paths = computeFsPaths(defaultConfig);
 
     Object.keys(paths).forEach(function (key) {
-      if (['chromedriver', 'geckodriver'].indexOf(key) === -1) {
+      if (['chrome', 'firefox'].indexOf(key) === -1) {
         return;
       }
-      fs.access(paths[key].installPath, fs.R_OK | fs.X_OK, function(err) {
-        assert.ok(!err, err);
-      });
+      var
+        spawn = require('child_process').spawnSync,
+        ls = spawn( 'ls', [ '-lh', paths[key].installPath] );
+      console.log(ls.stdout.toString());
+      fs.accessSync(paths[key].installPath, fs.R_OK | fs.X_OK);
     });
   });
 
