@@ -2,18 +2,32 @@ sudo: false
 
 language: java
 
-jdk:
-  - oraclejdk8
-
-env:
-  - TRAVIS_NODE_VERSION="stable"
-  - TRAVIS_NODE_VERSION=5
-  - TRAVIS_NODE_VERSION=4
-  - TRAVIS_NODE_VERSION=0.12
+matrix:
+  include:
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - TRAVIS_NODE_VERSION="stable"
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - TRAVIS_NODE_VERSION=5
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - TRAVIS_NODE_VERSION=4
+    - os: linux
+      jdk: oraclejdk8
+      env:
+        - TRAVIS_NODE_VERSION=0.12
+    - os: osx
+      osx_image: xcode8
+      env:
+        - TRAVIS_NODE_VERSION="0.12.17"
 
 before_install:
   - nvm install $TRAVIS_NODE_VERSION
 
 install: "npm install"
 
-script: "npm test"
+script: "./node_modules/.bin/mocha test/downloaded-files-rights.js"
